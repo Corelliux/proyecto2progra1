@@ -1,0 +1,80 @@
+import java.util.*;
+import java.util.Arrays;
+
+public class a {
+    public static String[][] matrizCaracteristicasNotas(String[][] matrizAcepcionesInterpretadas, int[] notasCaracteristicas, int[] clases){
+        String[][] matrizNueva = matrizAcepcionesInterpretadas.clone();
+        //Se asocian las clases con las notas musicales (Usamos la nomenclatura estadounidense)
+        HashMap<String, String> claseToString = new HashMap<String, String>();
+        claseToString.put("0", "A");
+        claseToString.put("1", "A#");
+        claseToString.put("2", "B");
+        claseToString.put("3", "C");
+        claseToString.put("4", "C#");
+        claseToString.put("5", "D");
+        claseToString.put("6", "D#");
+        claseToString.put("7", "E");
+        claseToString.put("8", "F");
+        claseToString.put("9", "F#");
+        claseToString.put("10", "G");
+        claseToString.put("11", "G#");
+
+        //Se asignan las clases y notas
+        HashMap<Integer, Integer> caracteristicaToclase = new HashMap<Integer, Integer>();
+        for(int k = 0; k < 12; k++){
+            caracteristicaToclase.put(clases[k], notasCaracteristicas[k]);
+        }
+
+        for(int i = 0; i < matrizNueva.length; i++){
+            for(int j = 0; j < 1; j++){
+                matrizNueva[i][j] = Integer.toString(caracteristicaToclase.get(Integer.parseInt(matrizAcepcionesInterpretadas[i][j])));
+            }
+        }
+
+        for(int i = 0; i < matrizNueva.length; i++){
+            for(int j = 1; j < 2; j++){
+                matrizNueva[i][j] = claseToString.get(matrizAcepcionesInterpretadas[i][j]);
+            }
+        }
+        return matrizNueva;
+    }
+    
+    
+    
+    
+    
+    
+    
+    // Metodo para ordenar y obtener los acordes de matrizCaracteristicasNotas
+    public static void acordes(String[][] matrizCaracteristicasNotas){
+        int[] columnaDeNotasCaracteristicas = new int[matrizCaracteristicasNotas.length];
+        String[] acordesAsociados = new String[matrizCaracteristicasNotas.length];
+
+        for(int i = 0; i < matrizCaracteristicasNotas.length; i++){
+            columnaDeNotasCaracteristicas[i] = Integer.parseInt(matrizCaracteristicasNotas[i][0]);
+            acordesAsociados[i] = matrizCaracteristicasNotas[i][1] + " " + matrizCaracteristicasNotas[i][2];
+        }
+
+        //Se ordenan los acordes asociados con base en las notas características
+        Ordenar.ordenAscendenteString(acordesAsociados, columnaDeNotasCaracteristicas);
+
+        // Se eliminan los acordes repetidos si es que los hay
+        acordesAsociados = Arrays.stream(acordesAsociados).distinct().toArray(String[]::new);
+
+        // Se imprimen los acordes sugeridos
+        System.out.println("Acordes sugeridos: ");
+        // Imprimimos los acordes si la cantidad de acordes es menor o igual que tres 
+        if(acordesAsociados.length < 3){
+            for(int k = 0; k < acordesAsociados.length; k++){
+                System.out.println(acordesAsociados[k].replace("maj", " "));
+            }
+        }
+        
+        // Si hay mas de 3 solo se reportan los primeros tres.
+        else{
+            for(int k = 0; k < 3; k++){
+                System.out.println(acordesAsociados[k].replace("maj", " "));    
+            }
+        }
+    }
+}
